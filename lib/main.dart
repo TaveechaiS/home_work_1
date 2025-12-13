@@ -1,4 +1,8 @@
+import 'recipe.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+import 'recipe_detail.dart'; 
 
 void main() {
   runApp(const RecipeApp());
@@ -7,7 +11,6 @@ void main() {
 class RecipeApp extends StatelessWidget {
   const RecipeApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -15,6 +18,7 @@ class RecipeApp extends StatelessWidget {
       theme: ThemeData(
         appBarTheme: const AppBarTheme(
           centerTitle: true,
+          backgroundColor: Color.fromARGB(255, 197, 247, 106),
         ),
         useMaterial3: true,
       ),
@@ -25,8 +29,6 @@ class RecipeApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
-
   final String title;
 
   @override
@@ -34,62 +36,57 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
+  Widget buildRecipeCard(Recipe recipe) {
+    return Card(
+      elevation: 2.0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: <Widget>[
+            Image(image: AssetImage(recipe.imageUrl)),
+            const SizedBox(height: 14.0),
+            Text(
+              recipe.imgLabel,
+              style: GoogleFonts.chakraPetch( 
+                fontSize: 20.0,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(widget.title)),
       body: SafeArea(
-        child: Container(
-          child: ListView.builder(
-            itemBuilder: (BuildContext context, int index) {
-              return buildRecipeCard(Recipe.samples[index]);
-            },
-            itemCount: Recipe.samples.length
-          ),
+        child: ListView.builder(
+          itemBuilder: (BuildContext context, int index) {
+            return GestureDetector(
+              onTap: () {
+                print('You tapped on ${Recipe.samples[index].imgLabel}');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return RecipeDetail(recipe: Recipe.samples[index]); 
+                    },
+                  ),
+                );
+              },
+              child: buildRecipeCard(Recipe.samples[index]),
+            );
+          },
+          itemCount: Recipe.samples.length,
         ),
       ),
     );
   }
-  
-  Widget buildRecipeCard(Recipe recipe) {
-    return Card(
-      child: Column(
-        children: <Widget>[
-          Image(image: AssetImage(recipe.imageUrl)),
-          Text(recipe.imgLabel),
-        ],
-      ),
-    );
-  }
 }
 
-class   Recipe {
-  String imgLabel;
-  String imageUrl;
-
-  Recipe(this.imgLabel,this.imageUrl);
-
-  static List<Recipe> samples = [
-    Recipe('Sweatshirt', 'assets/images/Sweatshirt_17_11zon.webp'),
-    Recipe('DRY-EX T-Shirt | Printed', 'assets/images/DRY-EX T-Shirt_16_11zon.webp'),
-    Recipe('DRY-EX Crew Neck T-Shirt | Patterned', 'assets/images/DRY-EX Crew Neck T-Shirt_15_11zon.webp'),
-    Recipe('MAGIC FOR ALL TIMELESS UT (Short Sleeve Graphic T-Shirt) | Monsters, Inc.',  'assets/images/MAGIC FOR ALL TIMELESS UT (Short Sleeve Graphic T-Shirt) Monsters, Inc._14_11zon.webp'),
-    Recipe('MAGIC FOR ALL TIMELESS UT (Short Sleeve Graphic T-Shirt) | Mickey Mouse', 'assets/images/MAGIC FOR ALL TIMELESS UT (Short Sleeve Graphic T-Shirt) Mickey Mouse_13_11zon.webp'),
-
-    Recipe('Fluffy Yarn Fleece Full-Zip Jacket', 'assets/images/Fluffy Yarn Fleece Full-Zip Jacket_12_11zon.webp'),
-    Recipe('PUFFTECH Jacket | Pocketable', 'assets/images/PUFFTECH Jacket  Pocketable_11_11zon.webp'),
-    Recipe('HEATTECH Lined Mittens | Souffle Yarn', 'assets/images/HEATTECH Lined Mittens Souffle Yarn_10_11zon.webp'),
-    Recipe('HEATTECH Ribbed Beanie | Marled Yarn', 'assets/images/HEATTECH Ribbed Beanie Marled Yarn_9_11zon.webp'),
-    Recipe('HEATTECH Scarf | Patterned', 'assets/images/HEATTECH Scarf Patterned_8_11zon.webp'),
-
-    Recipe('Ultra Stretch Dress | Sleeveless', 'assets/images/Ultra Stretch Dress Sleeveless_7_11zon.webp'),
-    Recipe('Drapey Denim Skort', 'assets/images/Drapey Denim Skort_6_11zon.webp'),
-    Recipe('Linen Cotton Shorts | Striped', 'assets/images/Linen Cotton Shorts Striped_5_11zon.webp'),
-    Recipe('Linen Blend Easy Pants | Can Be Set Up With Tops', 'assets/images/Linen Blend Easy Pants Can Be Set Up With Tops_4_11zon.webp'),
-    Recipe('Linen Blend Easy Pants | Striped', 'assets/images/Linen Blend Easy Pants Striped_3_11zon.webp'),
-
-
-  ];
-}
